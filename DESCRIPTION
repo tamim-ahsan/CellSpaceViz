@@ -4,14 +4,20 @@ Title: What the Package Does (Title Case)
 Version: 0.1.0
 Authors@R: c(
     person(
-      "Jane", "Doe",
-      email = "jane@example.com",
+      "Tamim", "Ahsan",
+      email = "ta941@uowmail.edu.au",
       role = c("aut", "cre")
     )
   )
-Description: More about what it does (maybe more than one line).
-    Continuation lines should be indented.
-License: What license is it under?
+Description: The author created this package to help with the visualization of data
+    from his PhD project, which leveraged a spatially resolved single-nucleus multiomics
+    approach to delineat stress-associated molecular changes in the cortex of psychiatric
+    patients.
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Config/roxygen2/version: 8.1.0
+Imports: 
+    ggplot2,
+    rlang,
+    scales
