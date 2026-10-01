@@ -34,51 +34,20 @@
 #'   reduction plot. Can be further customized using standard \code{ggplot2} layers.
 #'
 #' @importFrom rlang .data
-#'
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' # Create dummy single-cell embedding data
-#' set.seed(42)
-#' sample_df <- data.frame(
-#'   UMAP1 = rnorm(200),
-#'   UMAP2 = rnorm(200),
-#'   cell_type = factor(rep(c("T cell", "B cell", "NK cell", "Monocyte"), 50)),
-#'   modalities = rep(c("Mod1", "Mod2"), each = 100)
-#' )
 #'
-#' # 1. Basic usage with defaults
-#' p1 <- make_red_dim_plots(
-#'   df = sample_df,
-#'   ct_col = "cell_type",
-#'   dataset_col = "modalities"
-#' )
-#' print(p1)
-#'
-#' # 2. Custom axis labels, color scale, and point sizes
-#' custom_colors <- c(
-#'   "T cell" = "#E41A1C",
-#'   "B cell" = "#377EB8",
-#'   "NK cell" = "#4DAF4A",
-#'   "Monocyte" = "#984EA3"
-#' )
-#'
-#' p2 <- make_red_dim_plots(
-#'   df = sample_df,
+#' # 1. Faceted plot split by assay modality
+#' make_reduced_dim_plots(
+#'   df = reduced_dim_df,
 #'   dim_1 = "UMAP1",
 #'   dim_2 = "UMAP2",
 #'   ct_col = "cell_type",
-#'   dataset_col = "modalities",
-#'   axis_label_base = "UMAP_",
-#'   color_label = "Cell Type Annotation",
-#'   color_vec = custom_colors,
-#'   point_size = 1.2,
-#'   point_alpha = 0.6,
-#'   base_font_size = 12
+#'   dataset_col = "modality",
+#'   point_size = 1
 #' )
-#' print(p2)
-#' }
+
 make_reduced_dim_plots <- function(
     df,
     dim_1 = "UMAP1",
