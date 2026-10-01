@@ -1,30 +1,4 @@
 
-- [Overview](#overview)
-- [Installation](#installation)
-- [Package Functions](#package-functions)
-  - [1. `make_reduced_dim_plots()`](#1-make_reduced_dim_plots)
-  - [2. `make_marker_dotplot()`](#2-make_marker_dotplot)
-  - [3. `make_nuclei_count_barplot()`](#3-make_nuclei_count_barplot)
-  - [4. `make_deg_count_plot()`](#4-make_deg_count_plot)
-  - [5. `make_dea_metric_plot()`](#5-make_dea_metric_plot)
-  - [6. `make_dea_volcano_plot()`](#6-make_dea_volcano_plot)
-  - [7. `make_dea_lfc_heatmap()`](#7-make_dea_lfc_heatmap)
-  - [Included Functions and Example
-    Datasets](#included-functions-and-example-datasets)
-    - [1. `make_reduced_dim_plots()`](#1-make_reduced_dim_plots-1)
-    - [2. `make_marker_dotplot()`](#2-make_marker_dotplot-1)
-    - [3. `make_nuclei_count_barplot()`](#3-make_nuclei_count_barplot-1)
-    - [4. `make_deg_count_plot()`](#4-make_deg_count_plot-1)
-    - [5. `make_dea_metric_plot()`](#5-make_dea_metric_plot-1)
-    - [6. `make_dea_volcano_plot()`](#6-make_dea_volcano_plot-1)
-    - [7. `make_dea_lfc_heatmap()`](#7-make_dea_lfc_heatmap-1)
-    - [8. `make_gsea_pathway_plot()`](#8-make_gsea_pathway_plot)
-  - [Example Datasets Included in the
-    Package](#example-datasets-included-in-the-package)
-  - [Learning More](#learning-more)
-  - [Future Plans](#future-plans)
-  - [A Final (and Honest) Note 😄](#a-final-and-honest-note-smile)
-
 <div align="center">
 
 <img src="man/figures/logo.jpg" alt="" width="35%" />

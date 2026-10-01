@@ -1,7 +1,6 @@
 ---
 output:
-  github_document:
-    toc: true
+  github_document
 ---
 
 ```{r setup, include = FALSE}
