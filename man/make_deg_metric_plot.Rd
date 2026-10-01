@@ -84,7 +84,7 @@ make_deg_metric_plot(
   ct_col = "cell_type",
   lfc_col = "log2FoldChange",
   padj_col = "padj",
-  plot_title = "DEG Metrics Across Cell Types"
+  plot_title = "DEA Metrics Across Cell Types"
 )
 
 }
