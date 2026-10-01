@@ -65,12 +65,25 @@ make_reduced_dim_plots <- function(
   # -------------------------
   # Input validation
   # -------------------------
-  if (!is.data.frame(df)) {
-    stop("'df' must be a data.frame.", call. = FALSE)
+
+  if (!inherits(df, "data.frame")) {
+    stop(
+      "'df' must be a data.frame or tibble.",
+      call. = FALSE
+    )
   }
 
-  required_cols <- c(dim_1, dim_2, ct_col, dataset_col)
-  missing_cols <- setdiff(required_cols, colnames(df))
+  required_cols <- c(
+    dim_1,
+    dim_2,
+    ct_col,
+    dataset_col
+  )
+
+  missing_cols <- setdiff(
+    required_cols,
+    colnames(df)
+  )
 
   if (length(missing_cols) > 0) {
     stop(
@@ -80,70 +93,76 @@ make_reduced_dim_plots <- function(
     )
   }
 
-  # Cell type handling & Factor ordering
-  ## Preserve existing factor levels if present, otherwise sort unique non-NA values
-  if (is.factor(df[[ct_col]])) {
-    ct_levels <- levels(droplevels(df[[ct_col]]))
-  } else {
-    ct_levels <- sort(unique(stats::na.omit(df[[ct_col]])))
-  }
+  # -------------------------
+  # Cell-type handling
+  # -------------------------
+
+  ct_levels <- .get_factor_levels(
+    df[[ct_col]]
+  )
 
   if (length(ct_levels) == 0) {
-    stop("No valid (non-NA) values found in 'ct_col'.", call. = FALSE)
+    stop(
+      "No valid (non-NA) values found in 'ct_col'.",
+      call. = FALSE
+    )
   }
 
-  # Apply factor levels to df
-  df[[ct_col]] <- factor(df[[ct_col]], levels = ct_levels)
+  df[[ct_col]] <- factor(
+    df[[ct_col]],
+    levels = ct_levels
+  )
 
+  # -------------------------
   # Colours
-  if (is.null(color_vec)) {
-    color_vec <- scales::hue_pal()(length(ct_levels))
-    names(color_vec) <- ct_levels
-  } else {
-    if (is.null(names(color_vec))) {
-      if (length(color_vec) < length(ct_levels)) {
-        stop(
-          "The supplied 'color_vec' contains fewer colors (", length(color_vec),
-          ") than unique cell types (", length(ct_levels), ").",
-          call. = FALSE
-        )
-      }
-      ## Subset to exact number of levels before naming
-      color_vec <- color_vec[seq_along(ct_levels)]
-      names(color_vec) <- ct_levels
-    } else {
-      missing_ct <- setdiff(ct_levels, names(color_vec))
-      if (length(missing_ct) > 0) {
-        stop(
-          "Missing colors in 'color_vec' for cell type(s): ",
-          paste(missing_ct, collapse = ", "),
-          call. = FALSE
-        )
-      }
-      color_vec <- color_vec[ct_levels]
-    }
-  }
+  # -------------------------
 
-  ## Axis labels
+  color_vec <- .validate_colors(
+    levels = ct_levels,
+    color_vec = color_vec
+  )
+
+  # -------------------------
+  # Axis labels
+  # -------------------------
+
   if (!is.null(axis_label_base)) {
-    x_lab <- paste0(axis_label_base, "1")
-    y_lab <- paste0(axis_label_base, "2")
+
+    x_lab <- paste0(
+      axis_label_base,
+      "1"
+    )
+
+    y_lab <- paste0(
+      axis_label_base,
+      "2"
+    )
+
   } else {
+
     x_lab <- dim_1
     y_lab <- dim_2
+
   }
 
-  color_title <- if (is.null(color_label)) ct_col else color_label
+  color_title <- if (
+    is.null(color_label)
+  ) {
+    ct_col
+  } else {
+    color_label
+  }
 
   # -------------------------
   # Plot
   # -------------------------
+
   p <- ggplot2::ggplot(
     df,
     ggplot2::aes(
       x = .data[[dim_1]],
       y = .data[[dim_2]],
-      color = .data[[ct_col]]
+      colour = .data[[ct_col]]
     )
   ) +
     ggplot2::geom_point(
@@ -151,7 +170,9 @@ make_reduced_dim_plots <- function(
       alpha = point_alpha
     ) +
     ggplot2::facet_wrap(
-      ggplot2::vars(.data[[dataset_col]]),
+      ggplot2::vars(
+        .data[[dataset_col]]
+      ),
       scales = "free_x"
     ) +
     ggplot2::scale_color_manual(
@@ -161,7 +182,7 @@ make_reduced_dim_plots <- function(
     ggplot2::labs(
       x = x_lab,
       y = y_lab,
-      color = color_title
+      colour = color_title
     ) +
     ggplot2::theme_classic(
       base_size = base_font_size
@@ -172,18 +193,33 @@ make_reduced_dim_plots <- function(
         face = "bold",
         size = base_font_size + 2
       ),
-      panel.spacing = ggplot2::unit(2, "lines"),
-      axis.line = ggplot2::element_line(colour = "black"),
-      axis.title = ggplot2::element_text(size = base_font_size + 2),
-      legend.title = ggplot2::element_text(size = base_font_size + 2),
-      legend.spacing.y = ggplot2::unit(1, "cm")
+      panel.spacing = ggplot2::unit(
+        2,
+        "lines"
+      ),
+      axis.line = ggplot2::element_line(
+        colour = "black"
+      ),
+      axis.title = ggplot2::element_text(
+        size = base_font_size + 2
+      ),
+      legend.title = ggplot2::element_text(
+        size = base_font_size + 2
+      ),
+      legend.spacing.y = ggplot2::unit(
+        1,
+        "cm"
+      )
     ) +
     ggplot2::guides(
-      color = ggplot2::guide_legend(
+      colour = ggplot2::guide_legend(
         byrow = TRUE,
-        override.aes = list(size = 4)
+        override.aes = list(
+          size = 4
+        )
       )
     )
 
   return(p)
+
 }

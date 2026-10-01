@@ -16,7 +16,7 @@
 #'   `df`.
 #' @param ct_col Character scalar specifying the column containing
 #'   cell type, cluster, or spot annotations.
-#' @param ct_groups Character vector assigning each marker gene
+#' @param gene_groups Character vector assigning each marker gene
 #'   to a gene group for faceted visualization. Must have the same
 #'   length as `marker_genes`.
 #' @param color_scale_option Character scalar specifying the
@@ -68,7 +68,7 @@
 #'   df = marker_df,
 #'   marker_genes = marker_genes,
 #'   ct_col = "cell_type",
-#'   ct_groups = gene_groups,
+#'   gene_groups = gene_groups,
 #'   plot_title = "Example Marker Dot Plot"
 #' )
 #'
@@ -80,7 +80,7 @@ make_marker_dotplot <- function(
     df,
     marker_genes,
     ct_col,
-    ct_groups,
+    gene_groups,
     color_scale_option = "magma",
     color_scale_name = NULL,
     plot_title = NULL,
@@ -93,17 +93,31 @@ make_marker_dotplot <- function(
   # -------------------------
 
   if (!inherits(df, "data.frame")) {
-    stop("'df' must be a data.frame or tibble.", call. = FALSE)
-  }
-
-  if (!ct_col %in% colnames(df)) {
     stop(
-      "Column '", ct_col, "' not found in 'df'.",
+      "'df' must be a data.frame or tibble.",
       call. = FALSE
     )
   }
 
-  missing_genes <- setdiff(marker_genes, colnames(df))
+  if (!ct_col %in% colnames(df)) {
+    stop(
+      "Column '", ct_col,
+      "' not found in 'df'.",
+      call. = FALSE
+    )
+  }
+
+  if (length(marker_genes) == 0) {
+    stop(
+      "'marker_genes' must contain at least one gene.",
+      call. = FALSE
+    )
+  }
+
+  missing_genes <- setdiff(
+    marker_genes,
+    colnames(df)
+  )
 
   if (length(missing_genes) > 0) {
     stop(
@@ -120,18 +134,20 @@ make_marker_dotplot <- function(
     )
   }
 
-  if (length(marker_genes) != length(ct_groups)) {
+  if (length(marker_genes) != length(gene_groups)) {
     stop(
-      "Length of 'marker_genes' (", length(marker_genes),
-      ") does not match length of 'ct_groups' (",
-      length(ct_groups), ").",
+      "Length of 'marker_genes' (",
+      length(marker_genes),
+      ") does not match length of 'gene_groups' (",
+      length(gene_groups),
+      ").",
       call. = FALSE
     )
   }
 
-  if (anyNA(ct_groups)) {
+  if (anyNA(gene_groups)) {
     stop(
-      "'ct_groups' contains missing values.",
+      "'gene_groups' contains missing values.",
       call. = FALSE
     )
   }
@@ -154,7 +170,10 @@ make_marker_dotplot <- function(
 
   cells_or_spots <- match.arg(
     cells_or_spots,
-    choices = c("cells", "spots")
+    choices = c(
+      "cells",
+      "spots"
+    )
   )
 
   valid_scales <- c(
@@ -177,14 +196,12 @@ make_marker_dotplot <- function(
   }
 
   # -------------------------
-  # Cell type handling
+  # Cell-type handling
   # -------------------------
 
-  if (is.factor(df[[ct_col]])) {
-    ct_levels <- levels(df[[ct_col]])
-  } else {
-    ct_levels <- sort(unique(stats::na.omit(df[[ct_col]])))
-  }
+  ct_levels <- .get_factor_levels(
+    df[[ct_col]]
+  )
 
   if (length(ct_levels) == 0) {
     stop(
@@ -196,12 +213,15 @@ make_marker_dotplot <- function(
   ct_levels_y <- rev(ct_levels)
 
   # -------------------------
-  # Marker-gene mapping
+  # Gene grouping
   # -------------------------
 
-  marker_gene_map <- data.frame(
+  gene_group_map <- data.frame(
     genes = marker_genes,
-    gene_groups = ct_groups,
+    gene_groups = factor(
+      gene_groups,
+      levels = unique(gene_groups)
+    ),
     stringsAsFactors = FALSE
   )
 
@@ -214,15 +234,18 @@ make_marker_dotplot <- function(
       cols = tidyselect::all_of(marker_genes),
       names_to = "genes",
       values_to = "counts"
-    ) |>
+    )
+
+  df_processed[[ct_col]] <- factor(
+    df_processed[[ct_col]],
+    levels = ct_levels_y
+  )
+
+  df_processed <- df_processed |>
     dplyr::mutate(
       genes = factor(
         .data[["genes"]],
         levels = marker_genes
-      ),
-      !!ct_col := factor(
-        .data[[ct_col]],
-        levels = ct_levels_y
       )
     ) |>
     dplyr::group_by(
@@ -230,18 +253,18 @@ make_marker_dotplot <- function(
       .data[["genes"]]
     ) |>
     dplyr::summarise(
-      mean_count = mean(
+      mean_expression = mean(
         .data[["counts"]],
         na.rm = TRUE
       ),
-      pct_exp = mean(
+      pct_expressing = mean(
         .data[["counts"]] > 0,
         na.rm = TRUE
       ) * 100,
       .groups = "drop"
     ) |>
     dplyr::left_join(
-      marker_gene_map,
+      gene_group_map,
       by = "genes"
     )
 
@@ -270,8 +293,8 @@ make_marker_dotplot <- function(
     ggplot2::aes(
       x = .data[["genes"]],
       y = .data[[ct_col]],
-      colour = .data[["mean_count"]],
-      size = .data[["pct_exp"]]
+      colour = .data[["mean_expression"]],
+      size = .data[["pct_expressing"]]
     )
   ) +
     ggplot2::geom_point() +
@@ -345,4 +368,5 @@ make_marker_dotplot <- function(
   }
 
   return(p)
+
 }

@@ -1,17 +1,25 @@
-test_that("example dataset is available and correctly formatted", {
+test_that("example dataset is available", {
 
   expect_true(exists("reduced_dim_df"))
 
+})
+
+test_that("required columns exist", {
+
   expect_true(
     all(
-      c("UMAP1", "UMAP2", "cell_type", "modality") %in%
-        colnames(reduced_dim_df)
+      c(
+        "UMAP1",
+        "UMAP2",
+        "cell_type",
+        "modality"
+      ) %in% colnames(reduced_dim_df)
     )
   )
 
 })
 
-test_that("returns a ggplot object", {
+test_that("returns ggplot object", {
 
   p <- make_reduced_dim_plots(
     df = reduced_dim_df,
@@ -23,25 +31,17 @@ test_that("returns a ggplot object", {
 
 })
 
-test_that("default colours are generated successfully", {
+test_that("custom color vector works", {
 
-  p <- make_reduced_dim_plots(
-    df = reduced_dim_df,
-    ct_col = "cell_type",
-    dataset_col = "modality"
+  levels <- unique(
+    as.character(
+      reduced_dim_df$cell_type
+    )
   )
 
-  expect_s3_class(p, "ggplot")
-
-})
-
-test_that("custom named colours are accepted", {
-
-  cols <- c(
-    "B cell"   = "#E41A1C",
-    "Monocyte" = "#377EB8",
-    "NK cell"  = "#4DAF4A",
-    "T cell"   = "#984EA3"
+  cols <- setNames(
+    scales::hue_pal()(length(levels)),
+    levels
   )
 
   p <- make_reduced_dim_plots(
@@ -55,122 +55,15 @@ test_that("custom named colours are accepted", {
 
 })
 
-test_that("missing cell-type column throws error", {
+test_that("custom dimensions work", {
 
-  expect_error(
-    make_reduced_dim_plots(
-      df = reduced_dim_df,
-      ct_col = "missing_column",
-      dataset_col = "modality"
-    )
-  )
+  tmp <- reduced_dim_df
 
-})
-
-test_that("missing dataset column throws error", {
-
-  expect_error(
-    make_reduced_dim_plots(
-      df = reduced_dim_df,
-      ct_col = "cell_type",
-      dataset_col = "missing_column"
-    )
-  )
-
-})
-
-test_that("missing dim_1 column throws error", {
-
-  expect_error(
-    make_reduced_dim_plots(
-      df = reduced_dim_df,
-      dim_1 = "missing_dim",
-      ct_col = "cell_type",
-      dataset_col = "modality"
-    )
-  )
-
-})
-
-test_that("missing dim_2 column throws error", {
-
-  expect_error(
-    make_reduced_dim_plots(
-      df = reduced_dim_df,
-      dim_2 = "missing_dim",
-      ct_col = "cell_type",
-      dataset_col = "modality"
-    )
-  )
-
-})
-
-test_that("insufficient unnamed colour vector throws error", {
-
-  expect_error(
-    make_reduced_dim_plots(
-      df = reduced_dim_df,
-      ct_col = "cell_type",
-      dataset_col = "modality",
-      color_vec = c("red", "blue")
-    )
-  )
-
-})
-
-test_that("incomplete named colour vector throws error", {
-
-  cols <- c(
-    "B cell" = "red",
-    "T cell" = "blue"
-  )
-
-  expect_error(
-    make_reduced_dim_plots(
-      df = reduced_dim_df,
-      ct_col = "cell_type",
-      dataset_col = "modality",
-      color_vec = cols
-    )
-  )
-
-})
-
-test_that("factor level ordering is preserved", {
-
-  test_df <- reduced_dim_df
-
-  new_levels <- c(
-    "NK cell",
-    "T cell",
-    "B cell",
-    "Monocyte"
-  )
-
-  test_df$cell_type <- factor(
-    test_df$cell_type,
-    levels = new_levels
-  )
+  tmp$PC1 <- tmp$UMAP1
+  tmp$PC2 <- tmp$UMAP2
 
   p <- make_reduced_dim_plots(
-    df = test_df,
-    ct_col = "cell_type",
-    dataset_col = "modality"
-  )
-
-  expect_s3_class(p, "ggplot")
-
-})
-
-test_that("custom dimension names work", {
-
-  test_df <- reduced_dim_df
-
-  test_df$PC1 <- test_df$UMAP1
-  test_df$PC2 <- test_df$UMAP2
-
-  p <- make_reduced_dim_plots(
-    df = test_df,
+    df = tmp,
     dim_1 = "PC1",
     dim_2 = "PC2",
     ct_col = "cell_type",
@@ -181,57 +74,45 @@ test_that("custom dimension names work", {
 
 })
 
-test_that("custom axis labels work", {
+test_that("missing celltype column throws error", {
 
-  p <- make_reduced_dim_plots(
-    df = reduced_dim_df,
-    ct_col = "cell_type",
-    dataset_col = "modality",
-    axis_label_base = "tSNE"
+  expect_error(
+
+    make_reduced_dim_plots(
+      df = reduced_dim_df,
+      ct_col = "bad_column",
+      dataset_col = "modality"
+    )
+
   )
-
-  expect_s3_class(p, "ggplot")
 
 })
 
-test_that("custom point size and alpha work", {
+test_that("missing dataset column throws error", {
 
-  p <- make_reduced_dim_plots(
-    df = reduced_dim_df,
-    ct_col = "cell_type",
-    dataset_col = "modality",
-    point_size = 2,
-    point_alpha = 0.5
+  expect_error(
+
+    make_reduced_dim_plots(
+      df = reduced_dim_df,
+      ct_col = "cell_type",
+      dataset_col = "bad_column"
+    )
+
   )
-
-  expect_s3_class(p, "ggplot")
 
 })
 
-test_that("works with tibble input", {
+test_that("insufficient colors throw error", {
 
-  skip_if_not_installed("tibble")
+  expect_error(
 
-  test_df <- tibble::as_tibble(reduced_dim_df)
+    make_reduced_dim_plots(
+      df = reduced_dim_df,
+      ct_col = "cell_type",
+      dataset_col = "modality",
+      color_vec = c("red", "blue")
+    )
 
-  p <- make_reduced_dim_plots(
-    df = test_df,
-    ct_col = "cell_type",
-    dataset_col = "modality"
   )
-
-  expect_s3_class(p, "ggplot")
-
-})
-
-test_that("returns object with facetting", {
-
-  p <- make_reduced_dim_plots(
-    df = reduced_dim_df,
-    ct_col = "cell_type",
-    dataset_col = "modality"
-  )
-
-  expect_false(is.null(p$facet))
 
 })

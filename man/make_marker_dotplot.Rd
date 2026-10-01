@@ -8,7 +8,7 @@ make_marker_dotplot(
   df,
   marker_genes,
   ct_col,
-  ct_groups,
+  gene_groups,
   color_scale_option = "magma",
   color_scale_name = NULL,
   plot_title = NULL,
@@ -27,7 +27,7 @@ to display. Each gene must correspond to a numeric column in
 \item{ct_col}{Character scalar specifying the column containing
 cell type, cluster, or spot annotations.}
 
-\item{ct_groups}{Character vector assigning each marker gene
+\item{gene_groups}{Character vector assigning each marker gene
 to a gene group for faceted visualization. Must have the same
 length as `marker_genes`.}
 
@@ -95,7 +95,7 @@ make_marker_dotplot(
   df = marker_df,
   marker_genes = marker_genes,
   ct_col = "cell_type",
-  ct_groups = gene_groups,
+  gene_groups = gene_groups,
   plot_title = "Example Marker Dot Plot"
 )
 
