@@ -35,11 +35,9 @@ This work leveraged a **spatially resolved single-nucleus multiomics approach** 
 Throughout the project, I repeatedly found myself writing the same visualization code for:
 
 - dimensionality reduction plots
-- marker gene visualizations
+- patterns of marker gene expressions
 - cell-type composition summaries
 - differential expression analyses
-- volcano plots
-- heatmaps
 - pathway enrichment analyses
 
 Eventually, these functions became reusable enough that I decided to package them into **CellSpaceViz**.
@@ -82,11 +80,26 @@ library(CellSpaceViz)
 
 ---
 
-# Package Functions
+# Example Datasets Included in the Package
 
-Each plotting function is accompanied by a small example dataset that can be used immediately after installation.
+| Dataset | Purpose |
+|----------|----------|
+| `reduced_dim_df` | Dimensionality reduction plots |
+| `marker_df` | Marker-gene dot plots |
+| `nuclei_count_df` | Cell or nuclei count plots |
+| `deg_summary_df` | DEG count summaries |
+| `deg_results_df` | DEA metric plots |
+| `dea_volcano_df` | Volcano plots |
+| `dea_heatmap_df` | LFC heatmaps |
+| `gsea_results_df` | GSEA pathway enrichment plots |
 
-For additional information on any function or dataset:
+---
+
+# Learning More
+
+Every function and dataset is documented.
+
+Use:
 
 ```r
 ?function_name
@@ -98,285 +111,29 @@ or
 ?dataset_name
 ```
 
-For example:
+to access the help pages.
 
-```r
-?make_dea_volcano_plot
-?dea_volcano_df
-```
-
----
-
-## 1. `make_reduced_dim_plots()`
-
-Creates dimensionality reduction visualizations such as:
-
-- UMAP
-- t-SNE
-- PCA
-
-The function allows cells to be coloured by cell type and grouped by dataset.
-
-**Example dataset**
-
-```r
-reduced_dim_df
-```
-
-Learn more:
-
-```r
-?make_reduced_dim_plots
-?reduced_dim_df
-```
-
----
-
-## 2. `make_marker_dotplot()`
-
-Creates marker gene dot plots showing:
-
-- average expression
-- percentage of expressing cells
-
-across cell types.
-
-**Example dataset**
-
-```r
-marker_df
-```
-
-Learn more:
+Examples:
 
 ```r
 ?make_marker_dotplot
-?marker_df
 ```
-
----
-
-## 3. `make_nuclei_count_barplot()`
-
-Generates horizontal bar plots displaying:
-
-- cell counts
-- nuclei counts
-- spot counts
-
-across cell types.
-
-**Example dataset**
-
-```r
-nuclei_count_df
-```
-
-Learn more:
-
-```r
-?make_nuclei_count_barplot
-?nuclei_count_df
-```
-
----
-
-## 4. `make_deg_count_plot()`
-
-Creates stacked bar plots summarizing:
-
-- up-regulated genes
-- down-regulated genes
-- total DEGs
-
-for each cell type.
-
-**Example dataset**
-
-```r
-deg_summary_df
-```
-
-Learn more:
-
-```r
-?make_deg_count_plot
-?deg_summary_df
-```
-
----
-
-## 5. `make_dea_metric_plot()`
-
-Creates bubble plots showing:
-
-- log2 fold change
-- statistical significance
-
-across cell types.
-
-Bubble size reflects:
-
-```text
--log10(adjusted p-value)
-```
-
-**Example dataset**
-
-```r
-deg_results_df
-```
-
-Learn more:
-
-```r
-?make_dea_metric_plot
-?deg_results_df
-```
-
----
-
-## 6. `make_dea_volcano_plot()`
-
-Creates publication-ready volcano plots displaying:
-
-- log2 fold change
-- statistical significance
-- top labeled genes
-
-for differential expression analyses.
-
-**Example dataset**
-
-```r
-dea_volcano_df
-```
-
-Learn more:
 
 ```r
 ?make_dea_volcano_plot
-?dea_volcano_df
 ```
-
----
-
-## 7. `make_dea_lfc_heatmap()`
-
-Creates heatmaps displaying:
-
-- log2 fold-change values
-- significance annotations
-
-across cell types or conditions.
-
-Significance annotations are represented using:
-
-```text
-*
-**
-***
-```
-
-**Example dataset**
 
 ```r
-**a_heatmap_df
+?dea_heatmap_df
 ```
-
-Learn more:
-
-``**
-?make_dea_lfc_heatmap
-?dea_heatm**_df
-```
-
----
-
-## 8. `make_gsea_pa**way_plot()`
-
-Creates pathway enri**ment visualizations from Gene Set**nrichment Analysis (GSEA).
-
-Featu**s include:
-
-- pathway ranking by **S
-- positive and negative enrichm**t visualization
-- ontology filter**g
-- significance-based colour sca**ng
-
-Supported ontology examples i**lude:
-
-- GO_BP
-- GO**F**``markdown
----
-output:
-**github**ocument**--
-
-**-- README.md is generated from RE**ME.Rmd. Please edit README.Rmd --**
-**CellSpaceViz**<p align="center">
-***img src="man/figures/logo.png" wi**"center">
-<b>Visualization utilit**s for single-cell, single-nucleus**spatial transcriptomics, and mult**mic analyses</b>
-</p>
-
----
-
-## Ov**view
-
-I created **CellSpaceViz** while generating publication-quality figures for an article arising from my PhD project.
-
-This work leveraged a **spatially resolved single-nucleus multiomics approach** to delineate stress-associated molecular changes in the **prefrontal cortex** of psychiatric patients.
-
-Throughout the project, I repeatedly found myself writing custom plotting functions for:
-
-- dimensionality reduction visualizations
-- marker gene summaries
-- cell-type composition analyses
-- differential expression analyses
-- volcano plots
-- heatmaps
-- pathway enrichment analyses
-
-Over time, these functions became increasingly reusable, eventually leading to the development of **CellSpaceViz**.
-
-The goal of the package is to make it easy to generate clean, publication-ready visualizations commonly used in:
-
-- single-cell RNA-seq
-- single-nucleus RNA-seq
-- spatial transcriptomics
-- multiomics studies
-- differential expression analyses
-
----
-
-## Installation
-
-The package can be installed directly from GitHub.
-
-First, check whether the **remotes** package is already installed:
 
 ```r
-if (!requireNamespace("remotes", quietly = TRUE)) {
-  install.packages("remotes")
-}
-```
-
-Install **CellSpaceViz**:
-
-```r
-remotes::install_github(
-  "YOUR_GITHUB_USERNAME/CellSpaceViz"
-)
-```
-
-Load the package:
-
-```r
-library(CellSpaceViz)
+?gsea_results_df
 ```
 
 ---
 
-## Included Functions and Example Datasets
+# Included Functions and Example Datasets
 
 Each plotting function is accompanied by a small example dataset designed to demonstrate its functionality and simplify testing.
 
@@ -601,11 +358,6 @@ Features include:
 - ontology filtering
 - significance-based color scaling
 
-Supported ontology categories in the example dataset:
-
-- GO_BP
-- GO_MF
-- GO_CC
 
 **Example dataset**
 
@@ -622,60 +374,7 @@ Documentation:
 
 ---
 
-## Example Datasets Included in the Package
-
-| Dataset | Purpose |
-|----------|----------|
-| `reduced_dim_df` | Dimensionality reduction plots |
-| `marker_df` | Marker-gene dot plots |
-| `nuclei_count_df` | Cell or nuclei count plots |
-| `deg_summary_df` | DEG count summaries |
-| `deg_results_df` | DEA metric plots |
-| `dea_volcano_df` | Volcano plots |
-| `dea_heatmap_df` | LFC heatmaps |
-| `gsea_results_df` | GSEA pathway enrichment plots |
-
----
-
-## Learning More
-
-Every function and dataset is documented.
-
-Use:
-
-```r
-?function_name
-```
-
-or
-
-```r
-?dataset_name
-```
-
-to access the help pages.
-
-Examples:
-
-```r
-?make_marker_dotplot
-```
-
-```r
-?make_dea_volcano_plot
-```
-
-```r
-?dea_heatmap_df
-```
-
-```r
-?gsea_results_df
-```
-
----
-
-## Future Plans
+# Future Plans
 
 This README provides only a brief introduction to the package.
 
@@ -688,13 +387,13 @@ Stay tuned!
 
 ---
 
-## A Final (and Honest) Note 😄
+# A Final (and Honest) Note 😄
 
 This is my **first attempt at writing an R package**.
 
 CellSpaceViz came together through a combination of:
 
-- reading a book on R package development
+- reading a [book](https://r-pkgs.org/) on R package development
 - watching a lot of YouTube tutorials
 - substantial trial and error
 - many conversations with AI assistants, particularly **Microsoft Copilot** and **Google Gemini**
