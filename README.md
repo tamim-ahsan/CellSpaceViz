@@ -5,8 +5,8 @@
 
 # CellSpaceViz
 
-**Creating some plots commonly used in all single-cell and/or spatial
-omics studies**
+**Creating plots commonly used in all single-cell and/or spatial omics
+studies**
 
 </div>
 
