@@ -18,9 +18,13 @@ Encoding: UTF-8
 LazyData: true
 Config/roxygen2/version: 8.1.0
 Imports: 
+    dplyr,
     ggplot2,
+    ggtext,
     rlang,
-    scales
+    scales,
+    tidyr,
+    tidyselect
 Depends: 
     R (>= 3.5)
 Suggests: 
