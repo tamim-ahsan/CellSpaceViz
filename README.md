@@ -82,7 +82,7 @@ library(CellSpaceViz)
 | `deg_summary_df`  | DEG count summaries            |
 | `deg_results_df`  | DEA metric plots               |
 | `dea_volcano_df`  | Volcano plots                  |
-| `dea_heatmap_df`  | LFC heatmaps                   |
+| `dea_heatmap_df`  | Log2FoldChange heatmaps        |
 | `gsea_results_df` | GSEA pathway enrichment plots  |
 
 ------------------------------------------------------------------------
